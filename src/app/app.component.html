@@ -1,22 +1,29 @@
 <nav class="navbar navbar-light bg-light">
-  <a class="navbar-brand mr-auto" href="#">Blockchain Polls</a>
-  <button class="navbar-toggler" type="button" class="btn btn-secondary">Create Poll</button>
+  <a class="navbar-brand mr-auto" href="#">Encuestas (Blockchain)</a>
+  <button class="navbar-toggler" type="button" class="btn btn-secondary" (click)="showForm = !showForm">Crear encuesta</button>
 </nav>
 
 <section class="jumpotron bg-light text-center">
-  <h1>Polls Rethinked</h1>
+  <h1>Replanteamiento de las encuestas</h1>
   <p class="lead text-muted">
     Powered by Blockchain Technology
   </p>
 </section>
 
-<app-poll-create></app-poll-create>
+<app-poll-create *ngIf="showForm"></app-poll-create>
 
 <div class="d-flex">
   <div class="container poll-list">
-    List
+    <app-poll
+      *ngFor="let poll of polls"
+      [question]="poll.question"
+      [voted]="poll.voted"
+      [votes]="poll.votes"
+      [pollImage]="poll.image"
+    >
+    </app-poll>
   </div>
   <div class="container poll-detail">
-    Detail
+    Detalle
   </div>
 </div>
