@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
-import { Poll } from './types';
-//import { RouterOutlet } from '@angular/router';
+import { Poll, PollForm, PollVote } from './types';
+import { PollService } from './poll-service/poll.service';
 
 @Component({
   selector: 'app-root',
@@ -10,26 +10,19 @@ import { Poll } from './types';
 })
 export class AppComponent {
   showForm = false;
-  activePoll: { voted: boolean; question: string; options: string[]; results: number[] } | null = null;
+  activePoll: { id: number, voted: boolean; question: string; options: string[]; results: number[] } | null = null;
 
-  polls: Poll[] = [
-    {
-      id: 1,
-      question: '¿Prefieres los gatos o los perros?',
-      thumbnail: 'https://images.pexels.com/photos/46024/pexels-photo-46024.jpeg',
-      results: [0, 5, 7],
-      options: ['Gatos', 'Perros', 'Ambos'],
-      voted: true,
-    },
-    {
-      id: 2,
-      question: '¿Cuál es el mejor mes para pasar las vacaciones?',
-      thumbnail: 'https://images.pexels.com/photos/1118448/pexels-photo-1118448.jpeg',
-      results: [1, 6, 4],
-      options: ['Enero', 'Julio', 'Diciembre'],
-      voted: false,
-    },
-  ];
+  polls: Poll[] = [];
+
+  ngOnInit() {
+    this.ps.getPolls().subscribe((polls: Poll[]) => {
+      this.polls = polls;
+    });
+  }
+
+  constructor(private ps: PollService) {
+    
+  }
 
   setActivePoll(poll: any) {
     this.activePoll = null;
@@ -37,5 +30,13 @@ export class AppComponent {
     setTimeout(() => {
       this.activePoll = poll;
     }, 100);
+  }
+
+  handlePollCreate(poll: PollForm) {
+    this.ps.createPoll(poll);
+  }
+
+  handlePollVote(pollVoted: PollVote) {
+    this.ps.vote(pollVoted.id, pollVoted.vote);
   }
 }
